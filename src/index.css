@@ -1,0 +1,297 @@
+/* Top of your index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-serif: "Newsreader", Georgia, serif;
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-fade-in: fadeIn 0.4s ease-out forwards;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0b0f19;
+  color: #f8fafc;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html {
+  background-color: #0b0f19;
+}
+
+input,
+textarea,
+select {
+  background-color: #111827;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* Dark Mode Overrides for Accessibility */
+html.dark body {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .min-h-screen {
+  background-color: #0b0f19 !important;
+}
+
+html.dark .bg-\[\#F5F5F2\] {
+  background-color: #0b0f19 !important;
+}
+
+/* Cards & containers in dark mode */
+html.dark .bg-white {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+  border-color: #374151 !important;
+}
+
+html.dark .border-slate-300\/60,
+html.dark .border-slate-300,
+html.dark .border-slate-250\/70,
+html.dark .border-slate-250,
+html.dark .border-slate-200\/60,
+html.dark .border-slate-200,
+html.dark .border-slate-100 {
+  border-color: #2e3748 !important;
+}
+
+/* Dark Text accessibility contrast */
+html.dark .text-slate-900,
+html.dark .text-slate-850,
+html.dark .text-slate-800,
+html.dark .text-slate-750,
+html.dark .text-slate-705,
+html.dark .text-slate-700 {
+  color: #f3f4f6 !important;
+}
+
+/* Fixed: covers the custom fallback we set for text-slate-650 */
+html.dark .text-slate-650,
+html.dark .text-slate-600 {
+  color: #e5e7eb !important;
+}
+
+html.dark .text-slate-500,
+html.dark .text-slate-450,
+html.dark .text-slate-400 {
+  color: #9cb3ca !important;
+}
+
+/* Quick Start Guide box / Sideboxes */
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/50,
+html.dark .bg-slate-100,
+html.dark .bg-slate-100\/30 {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+/* Headings and specific accent spans */
+html.dark .bg-slate-200\/60,
+html.dark .bg-slate-200 {
+  background-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Inputs, Textareas, and Dropdown selectors */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Specific component buttons and pill borders */
+html.dark .bg-white.hover\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+html.dark .text-emerald-600 {
+  color: #34d399 !important;
+}
+
+html.dark .bg-emerald-50 {
+  background-color: #064e3b !important;
+  color: #ecfdf5 !important;
+  border-color: #047857 !important;
+}
+
+html.dark .bg-emerald-50:hover {
+  background-color: #065f46 !important;
+}
+
+html.dark .bg-emerald-50\/20 {
+  background-color: #064e3b40 !important;
+}
+
+html.dark .bg-emerald-100 {
+  background-color: #065f46 !important;
+  color: #ecfdf5 !important;
+}
+
+html.dark .border-emerald-300\/80,
+html.dark .border-emerald-300,
+html.dark .border-emerald-200\/60,
+html.dark .border-emerald-200 {
+  border-color: #047857 !important;
+}
+
+html.dark .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+  color: #e0e7ff !important;
+  border-color: #4338ca !important;
+}
+
+html.dark .bg-indigo-50\/50 {
+  background-color: #1e1b4b70 !important;
+}
+
+html.dark .border-indigo-200 {
+  border-color: #4338ca !important;
+}
+
+html.dark .bg-rose-50 {
+  background-color: #4c0519 !important;
+  color: #ffe4e6 !important;
+  border-color: #9f1239 !important;
+}
+
+html.dark .border-rose-200\/80,
+html.dark .border-rose-100 {
+  border-color: #9f1239 !important;
+}
+
+html.dark .bg-amber-500 {
+  background-color: #d97706 !important;
+}
+
+/* Perspective Engine timeline & quotes */
+html.dark .text-\[\#64748b\] {
+  color: #94a3b8 !important;
+}
+
+html.dark .bg-\[\#F5F5F2\] {
+  background-color: #0b0f19 !important;
+}
+/* Quick Start Guide box & Declutter Banner in dark mode */
+html.dark .bg-\[\#E9E9E2\],
+html.dark .bg-\[\#E9E9E2\]\/70 {
+  background-color: #111827 !important;
+  color: #f8fafc !important;
+  border-color: #374151 !important;
+}
+
+html.dark .border-slate-300\/40,
+html.dark .border-slate-300\/60,
+html.dark .border-slate-300\/80 {
+  border-color: #2e3748 !important;
+}
+
+html.dark .bg-white\/60 {
+  background-color: #1e293b95 !important;
+  border-color: #33415580 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark .border-white\/40 {
+  border-color: #334155a0 !important;
+}
+
+html.dark .text-\[\#475569\] {
+  color: #94a3b8 !important;
+}
+
+html.dark .bg-white\/50 {
+  background-color: #1e293b70 !important;
+  color: #cbd5e1 !important;
+  border-color: #334155 !important;
+}
+
+html.dark .bg-white\/50:hover {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+html.dark .text-rose-500 {
+  color: #fb7185 !important;
+}
+
+html.dark .text-blue-500 {
+  color: #60a5fa !important;
+}
+
+/* Modals & Backdrop Blur */
+html.dark .bg-slate-900\/65 {
+  background-color: rgba(3, 7, 18, 0.8) !important;
+}
+
+/* SVGs brightness / colors */
+html.dark svg {
+  stroke-width: 2.25px !important;
+}
+
+html.dark .text-slate-450 {
+  color: #94a3b8 !important;
+}
+
+/* Highlight tags inside timeline and detail snapshots */
+html.dark .font-mono.text-slate-500 {
+  color: #cbd5e1 !important;
+}
+
+/* High Contrast Accent colors for status elements */
+html.dark .bg-teal-50 {
+  background-color: #115e59 !important;
+  color: #ccfbf1 !important;
+  border-color: #0d9488 !important;
+}
+
+html.dark .bg-cyan-50 {
+  background-color: #155e75 !important;
+  color: #cffafe !important;
+  border-color: #0891b2 !important;
+}
+
+html.dark .bg-purple-50 {
+  background-color: #6b21a8 !important;
+  color: #f3e8ff !important;
+  border-color: #9333ea !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: #78350f !important;
+  color: #fef3c7 !important;
+  border-color: #d97706 !important;
+}
+
+html.dark .bg-rose-50\/60 {
+  background-color: #4c051980 !important;
+}
+
+html.dark .bg-amber-50\/60 {
+  background-color: #78350f80 !important;
+}
