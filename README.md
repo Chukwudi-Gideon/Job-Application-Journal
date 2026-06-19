@@ -2,7 +2,7 @@
 
 A polished React + TypeScript + Vite portfolio project for tracking job applications. It follows each opportunity from application submission through the hiring lifecycle.
 
-Live demo: https://vercel.com/chukwudi-gideons-projects/job-application-journal
+Live demo: https://job-application-journal.vercel.app/
 
 ## Overview
 
