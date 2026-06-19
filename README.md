@@ -2,11 +2,13 @@
 
 A polished React + TypeScript + Vite portfolio project for tracking job applications. It follows each opportunity from application submission through the hiring lifecycle.
 
+Live demo: https://vercel.com/chukwudi-gideons-projects/job-application-journal
+
 ## Overview
 
 This project is a personal job application journal built with Vite, React, TypeScript, Tailwind CSS, and Lucide icons.
 
-It stores applications locally in the browser and helps you manage active roles, archived history, follow-up reminders, and job status updates.
+All data is stored locally in the browser, so the tool is immediately ready to use without backend setup while preserving your application history and follow-up reminders.
 
 ## Key Features
 
