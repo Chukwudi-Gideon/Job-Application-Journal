@@ -9,7 +9,7 @@ import {QuickStartGuide} from './components/QuickStartGuide'
 import { Quotes_Perspectives } from './components/Quotes_Perspectives';
 import {JobCard} from './components/JobCard'
 import { getAnonymousUser } from './lib/auth';
-
+import { Analytics } from "@vercel/analytics/next"
 type ToastType = 'success' | 'archive' | 'system';
 
 interface ToastState {
@@ -503,7 +503,7 @@ if (searchQuery.trim()) {
   </div>
 )}
          {/* Custom Export Selector Modal Dialog Popup Backdrop */}
-     
+     <Analytics />
       </div>
   );
 }
