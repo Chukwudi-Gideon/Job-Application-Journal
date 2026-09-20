@@ -63,6 +63,7 @@ export const QuickStartGuide = ({ onClose }: QuickStartGuideProps) => {
               <li>Update status when you move from Applied → Interviewing → Offered.</li>
               <li>Mark roles as Rejected, Unresponsive, or Accepted to cleanly archive completed entries.</li>
               <li>Review the latest activity count and use the search bar to find jobs by company, role, or notes.</li>
+              <li>Saved records live in the connected project, not only in the current tab. In plain English: they can usually be recovered on the same browser/device setup, and may also appear elsewhere only if the same app project is connected there.</li>
             </ul>
           </div>
         </div>
@@ -147,7 +148,28 @@ export const QuickStartGuide = ({ onClose }: QuickStartGuideProps) => {
           <div className="bg-slate-800/40 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
             <h4 className="text-sm font-semibold text-slate-100">Keep statuses updated</h4>
             <p className="text-xs text-slate-400 leading-relaxed mt-2">
-              Move roles through the workflow as soon as something changes. Active roles stay visible, while finished applications are archived cleanly.
+              Move roles through the workflow as soon as something changes. Active roles stay visible, while finished applications are archived cleanly. This is not a personal account system, so recovery depends on the same project setup being available. If you switch browsers or devices, your records are not guaranteed to follow unless the same connected app/project is being used.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* About the project */}
+      <div className="space-y-4 pt-2 border-t border-slate-800/80">
+        <h3 className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider">
+          About this project
+        </h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="bg-slate-800/40 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+            <h4 className="text-sm font-semibold text-slate-100">Purpose</h4>
+            <p className="text-xs text-slate-400 leading-relaxed mt-2">
+              Job Application Journal is a personal workflow tool for managing the recruiting process, keeping notes in one place, and maintaining a clean record of active and completed opportunities.
+            </p>
+          </div>
+          <div className="bg-slate-800/40 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+            <h4 className="text-sm font-semibold text-slate-100">Data protection & transparency</h4>
+            <p className="text-xs text-slate-400 leading-relaxed mt-2">
+              The app stores job-search records in Supabase using anonymous session-based authentication. It is intended for personal tracking only and is not designed to hold sensitive identity data, credentials, or formal HR records.
             </p>
           </div>
         </div>

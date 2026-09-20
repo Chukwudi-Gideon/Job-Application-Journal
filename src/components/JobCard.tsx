@@ -35,22 +35,22 @@ export const JobCard: React.FC<JobCardProps> = ({
   const [showSoftLanding, setShowSoftLanding] = useState(false);
 
   // Added string fallbacks to prevent runtime crashes when invoking .trim()
-  const [cvVersion, setCvVersion] = useState(app.cvVersion || '');
+  const [cvVersion, setCvVersion] = useState(app.cv_version || '');
   const [description, setDescription] = useState(app.description || '');
-  const [personalNotes, setPersonalNotes] = useState(app.personalNotes || '');
+  const [personalNotes, setPersonalNotes] = useState(app.personal_notes || '');
 
-  const [salaryRequested, setSalaryRequested] = useState(app.salaryRequested || '');
-  const [salaryOffered, setSalaryOffered] = useState(app.salaryOffered || '');
+  const [salaryRequested, setSalaryRequested] = useState(app.salary_requested || '');
+  const [salaryOffered, setSalaryOffered] = useState(app.salary_offered || '');
   const [url, setUrl] = useState(app.url || '');
 
-  const [uploadedFile, setUploadedFile] = useState<{ name: string; type: string; size: number; data: string; } | null>(app.uploadedFile || null);
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; type: string; size: number; data: string; } | null>(app.uploaded_file || null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   // Follow-up customization states
-  const [followUpIntervalDays, setFollowUpIntervalDays] = useState<number>(app.followUpIntervalDays || 7);
-  const [customFollowUpDays, setCustomFollowUpDays] = useState<string>((app.followUpIntervalDays && ![5, 7, 10, 14].includes(app.followUpIntervalDays)) ? String(app.followUpIntervalDays) : '');
-  const [followUpType, setFollowUpType] = useState<'preset' | 'custom'>((app.followUpIntervalDays && ![5, 7, 10, 14].includes(app.followUpIntervalDays)) ? 'custom' : 'preset');
+  const [followUpIntervalDays, setFollowUpIntervalDays] = useState<number>(app.follow_up_interval_days || 7);
+  const [customFollowUpDays, setCustomFollowUpDays] = useState<string>((app.follow_up_interval_days && ![5, 7, 10, 14].includes(app.follow_up_interval_days)) ? String(app.follow_up_interval_days) : '');
+  const [followUpType, setFollowUpType] = useState<'preset' | 'custom'>((app.follow_up_interval_days && ![5, 7, 10, 14].includes(app.follow_up_interval_days)) ? 'custom' : 'preset');
 
   const [showApprovedMessage, setShowApprovedMessage] = useState(false);
   const [hasFollowUpAcknowledged, setHasFollowUpAcknowledged] = useState(false);
@@ -127,23 +127,23 @@ export const JobCard: React.FC<JobCardProps> = ({
 
   // Sync edits if parent state updates
   useEffect(() => {
-    setCvVersion(app.cvVersion || '');
-    setPersonalNotes(app.personalNotes || '');
+    setCvVersion(app.cv_version || '');
+    setPersonalNotes(app.personal_notes || '');
     setDescription(app.description || '');
-    setSalaryRequested(app.salaryRequested || '');
-    setSalaryOffered(app.salaryOffered || '');
+    setSalaryRequested(app.salary_requested || '');
+    setSalaryOffered(app.salary_offered || '');
     setUrl(app.url || '');
-    setUploadedFile(app.uploadedFile || null);
-    setFollowUpIntervalDays(app.followUpIntervalDays || 7);
-    
-    const isCustomDays = app.followUpIntervalDays && ![5, 7, 10, 14].includes(app.followUpIntervalDays);
+    setUploadedFile(app.uploaded_file || null);
+    setFollowUpIntervalDays(app.follow_up_interval_days || 7);
+
+    const isCustomDays = app.follow_up_interval_days && ![5, 7, 10, 14].includes(app.follow_up_interval_days);
     setFollowUpType(isCustomDays ? 'custom' : 'preset');
-    setCustomFollowUpDays(isCustomDays ? String(app.followUpIntervalDays) : '');
+    setCustomFollowUpDays(isCustomDays ? String(app.follow_up_interval_days) : '');
   }, [app]);
 
   // Calculations for dates & feedback
-  const updatedDate = new Date(app.updatedAt);
-  const appliedDate = new Date(app.appliedAt);
+  const updatedDate = new Date(app.updated_at);
+  const appliedDate = new Date(app.applied_at);
 
   const daysSinceApplied = Math.floor(
     (new Date().getTime() - appliedDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -154,7 +154,7 @@ export const JobCard: React.FC<JobCardProps> = ({
   );
 
   // Follow-up reminder logic: If status = "Applied" & >= customized reminder days
-  const followUpInterval = app.followUpIntervalDays || 7;
+  const followUpInterval = app.follow_up_interval_days || 7;
   const needsFollowUpReminder = app.status === 'Applied' && daysSinceApplied >= followUpInterval && !hasFollowUpAcknowledged;
 
   // 2. Ghosting recommendation logic: If 30 days without response/update
@@ -186,7 +186,7 @@ const handleStatusChange = (newStatus: JobStatus) => {
   onUpdate({
     ...app,
     status: newStatus,
-    updatedAt: new Date().toISOString()
+    updated_at: new Date().toISOString()
   });
 };
 
@@ -195,15 +195,15 @@ const handleStatusChange = (newStatus: JobStatus) => {
   const handleSaveEdits = () => {
     onUpdate({
       ...app,
-      cvVersion: cvVersion.trim(),
-      personalNotes: personalNotes.trim(),
+      cv_version: cvVersion.trim(),
+      personal_notes: personalNotes.trim(),
       description: description.trim(),
-      salaryRequested: salaryRequested.trim(),
-      salaryOffered: salaryOffered.trim(),
+      salary_requested: salaryRequested.trim(),
+      salary_offered: salaryOffered.trim(),
       url: url.trim(),
-      uploadedFile,
-      followUpIntervalDays,
-      updatedAt: new Date().toISOString()
+      uploaded_file: uploadedFile,
+      follow_up_interval_days: followUpIntervalDays,
+      updated_at: new Date().toISOString()
     });
     setIsEditingDocs(false);
   };
@@ -265,7 +265,7 @@ return (
           
           {/* Custom elegant branding logo placeholder */}
           <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-100 flex items-center justify-center font-display font-bold text-xl uppercase tracking-wider shrink-0 shadow-sm border border-slate-700 select-none">
-            {app.companyName.charAt(0)}
+            {app.company_name.charAt(0)}
           </div>
 
           <div className="flex-1 space-y-1.5">
@@ -289,7 +289,7 @@ return (
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="font-display font-bold text-lg text-slate-100 tracking-tight">
-                  {app.companyName}
+                  {app.company_name}
                 </h3>
                 <p className="text-sm font-medium text-slate-400">
                   {app.role}
@@ -298,16 +298,16 @@ return (
               <div className="flex flex-wrap items-center gap-1.5 mt-2">
   
 {/* Job Type Time Badge */}
-{app.jobTime?.type && (
+{app.job_time?.type && (
   <span className="text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-slate-850 border border-slate-800 text-slate-400 uppercase">
-    ⏰ {app.jobTime.type} {app.jobTime.expectedHours ? `(${app.jobTime.expectedHours}h)` : ''}
+    ⏰ {app.job_time.type} {app.job_time.expectedHours ? `(${app.job_time.expectedHours}h)` : ''}
   </span>
 )}
 
   {/* Active Automated Wishlist Tracking Status Flag */}
-  {app.status === 'Wishlist' && app.wishlistReminder?.enabled && (
+  {app.status === 'Wishlist' && app.wishlist_reminder?.enabled && (
     <span className="text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-indigo-950/40 border border-indigo-900/40 text-indigo-400 uppercase animate-pulse">
-      ⚡ Auto-Remind: T-{Math.ceil((new Date(app.wishlistReminder.remindAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} Days
+      ⚡ Auto-Remind: T-{Math.ceil((new Date(app.wishlist_reminder.remindAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} Days
     </span>
   )}
   
@@ -328,7 +328,7 @@ return (
             </div>
 
             <div className="flex items-center justify-between pt-1 text-[10px] text-slate-400 font-mono">
-              <span className="uppercase tracking-wider">Applied {new Date(app.appliedAt).toLocaleDateString()}</span>
+              <span className="uppercase tracking-wider">Applied {new Date(app.applied_at).toLocaleDateString()}</span>
               <span className="italic">Last updated: {daysSinceUpdated === 0 ? "today" : `${daysSinceUpdated} days ago`}</span>
             </div>
           </div>
@@ -377,7 +377,7 @@ return (
 
           <button
             onClick={() => {
-              if (window.confirm(`Delete application for ${app.role} at ${app.companyName}?`)) {
+              if (window.confirm(`Delete application for ${app.role} at ${app.company_name}?`)) {
                 onDelete(app.id);
               }
             }}
@@ -677,7 +677,7 @@ You're making great progress! Every step forward proves your hard work. Keep it 
                     <div className="border-b border-slate-800 pb-3">
                       <span className="font-mono text-[10px] font-bold text-slate-400 uppercase block mb-1">Tailored CV Version</span>
                       <p className="text-slate-200 font-medium font-mono bg-slate-900 p-2 rounded border border-slate-800">
-                        {app.cvVersion || <span className="text-slate-500 italic">No specific CV variant noted</span>}
+                        {app.cv_version || <span className="text-slate-500 italic">No specific CV variant noted</span>}
                       </p>
                     </div>
 
@@ -685,27 +685,27 @@ You're making great progress! Every step forward proves your hard work. Keep it 
                     <div className="border-b border-slate-800 pb-3">
                       <span className="font-mono text-[10px] font-bold text-slate-400 uppercase block mb-1">Personal Notes</span>
                       <p className="text-slate-300 leading-relaxed bg-slate-900 p-2 rounded whitespace-pre-wrap border border-slate-800">
-                        {app.personalNotes || <span className="text-slate-500 italic">No notes written yet. Write your questions, ideas and tactics here.</span>}
+                        {app.personal_notes || <span className="text-slate-500 italic">No notes written yet. Write your questions, ideas and tactics here.</span>}
                       </p>
                     </div>
 
                     {/* Snapshot box - Primary differentiator */}
                     <div className="space-y-2">
                       <span className="font-mono text-[10px] font-bold text-slate-400 uppercase block mb-1">Saved Job description snap (Memory Vault)</span>
-                      {app.uploadedFile && (
+                      {app.uploaded_file && (
                         <div className="bg-emerald-950/20 border border-emerald-900/50 p-3 rounded-xl flex items-center justify-between mb-2 animate-fade-in">
                           <div className="flex items-center gap-2">
                             <div className="p-1.5 bg-emerald-900/40 text-emerald-300 rounded">
                               <File className="w-4 h-4" />
                             </div>
                             <div className="text-left">
-                              <p className="text-xs font-mono font-bold text-slate-200 truncate max-w-[220px]">{app.uploadedFile.name}</p>
-                              <p className="text-[10px] text-slate-400 font-mono font-medium">({(app.uploadedFile.size / 1024).toFixed(1)} KB)</p>
+                              <p className="text-xs font-mono font-bold text-slate-200 truncate max-w-[220px]">{app.uploaded_file.name}</p>
+                              <p className="text-[10px] text-slate-400 font-mono font-medium">({(app.uploaded_file.size / 1024).toFixed(1)} KB)</p>
                             </div>
                           </div>
                           <a
-                            href={app.uploadedFile.data}
-                            download={app.uploadedFile.name}
+                            href={app.uploaded_file.data}
+                            download={app.uploaded_file.name}
                             className="text-[10px] font-mono bg-emerald-600 hover:bg-emerald-50 text-white px-3 py-1.5 rounded-full transition font-bold"
                           >
                             Download File

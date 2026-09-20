@@ -5,7 +5,7 @@ import {useState, useEffect} from 'react';
 interface AddJobFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (application: Omit<JobApplication, 'id' | 'createdAt' | 'updatedAt' | 'appliedAt' | 'timeline' | 'lastFollowUpAt'>) => void;
+  onAdd: (application: Omit<JobApplication,'id' | 'user_id' | 'created_at' | 'updated_at' | 'applied_at' | 'timeline' | 'last_follow_up_at'>) => void;
   existingApps: JobApplication[];
   onViewExistingApp: (id: string) => void;
 }
@@ -129,7 +129,7 @@ const [followUpType, setFollowUpType] = useState<'preset' | 'custom'>('preset');
 
     const match = existingApps.find(
       (app) =>
-        app.companyName.trim().toLowerCase() === companyName.trim().toLowerCase() &&
+        app.company_name.trim().toLowerCase() === companyName.trim().toLowerCase() &&
         app.role.trim().toLowerCase() === role.trim().toLowerCase()
     );
 
@@ -156,30 +156,37 @@ const [followUpType, setFollowUpType] = useState<'preset' | 'custom'>('preset');
     const finalMethod = method === 'Other' ? customMethod.trim() : method;
 
 onAdd({
-  companyName: companyName.trim(),
+  company_name: companyName.trim(),
   role: role.trim(),
   location: (location || '').trim(),
-  salaryRequested: (salaryRequested || '').trim(),
-  salaryOffered: (salaryOffered || '').trim(),
+  salary_requested: (salaryRequested || '').trim(),
+  salary_offered: (salaryOffered || '').trim(),
   source: finalSource || 'Other Spontaneous Source',
   method: finalMethod || 'Other Spontaneous Method',
   url: (url || '').trim(),
-  jobTime: jobType ? {
-    type: jobType,
-    expectedHours: hoursCap && !isNaN(parseInt(hoursCap, 10)) ? parseInt(hoursCap, 10) : undefined
-  } : undefined,
-  wishlistReminder: {
+
+  job_time: jobType
+    ? {
+        type: jobType,
+        expectedHours:
+          hoursCap && !isNaN(parseInt(hoursCap, 10))
+            ? parseInt(hoursCap, 10)
+            : undefined,
+      }
+    : undefined,
+
+  wishlist_reminder: {
     enabled: status === 'Wishlist' ? autoRemind : false,
-   
-  remindAt: reminderDate.toISOString(), 
-    daysOffset: reminderDays
-  }, 
+    remindAt: reminderDate.toISOString(),
+    daysOffset: reminderDays,
+  },
+
   description: (description || '').trim(),
-  cvVersion: (cvVersion || '').trim(),
-  personalNotes: (personalNotes || '').trim(),
+  cv_version: (cvVersion || '').trim(),
+  personal_notes: (personalNotes || '').trim(),
   status,
-  uploadedFile, 
-  followUpIntervalDays,
+  uploaded_file: uploadedFile,
+  follow_up_interval_days: followUpIntervalDays,
 });
 
 
@@ -238,7 +245,7 @@ return (
                 Duplicate Warning: Already Applied!
               </h4>
               <p className="text-xs text-rose-300">
-                Looks like you already applied to <strong>{duplicateApp.role}</strong> at <strong>{duplicateApp.companyName}</strong> on {new Date(duplicateApp.appliedAt).toLocaleDateString()}.
+                Looks like you already applied to <strong>{duplicateApp.role}</strong> at <strong>{duplicateApp.company_name}</strong> on {new Date(duplicateApp.applied_at).toLocaleDateString()}.
               </p>
               <div className="pt-2 flex gap-3">
                 <button

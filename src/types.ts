@@ -10,41 +10,47 @@ export interface TimelineStep {
 }
 export type JobTimeType = 'Full-Time' | 'Part-Time' | 'Contract' | 'Internship';
 
- export interface JobApplication {
+export interface JobApplication {
   id: string;
-  companyName: string;
+  user_id: string; 
+  company_name: string;
   role: string;
-  location: string;
-  salaryRequested: string;
-  salaryOffered: string;
-  source: string; 
-  method: string; 
-  url: string;
-  description: string;
-  cvVersion: string; 
-   personalNotes: string;
-  status: JobStatus;
-  timeline: TimelineStep[];
-lastFollowUpAt?: string | null;
-  followUpIntervalDays?: number; 
-  createdAt: string;
-  appliedAt: string; 
-  updatedAt: string; 
+  location: string | null; 
+  salary_requested: string | null;
+  salary_offered: string | null;
 
-    uploadedFile?: {
+  source: string | null; 
+  method: string | null; 
+  url: string | null;
+  description: string | null;
+  cv_version: string | null; 
+  personal_notes: string | null;
+  
+  status: JobStatus;
+  timeline: TimelineStep[]; 
+
+  last_follow_up_at?: string | null;
+  follow_up_interval_days?: number | null; 
+  
+  created_at: string;
+  applied_at: string; 
+  updated_at: string; 
+
+  uploaded_file?: {
     name: string;
     type: string;
     size: number;
     data: string; // Base64 dataUrl
   } | null;
 
-  jobTime?: {
+  job_time?: {
     type?: JobTimeType;
     expectedHours?: number;
-  };
-  wishlistReminder?: {
+  } | null;
+
+  wishlist_reminder?: {
     enabled: boolean;
     remindAt: string; 
     daysOffset: number; 
-  };
+  } | null;
 }

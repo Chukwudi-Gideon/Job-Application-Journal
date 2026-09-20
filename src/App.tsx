@@ -1,16 +1,15 @@
 
+import { supabase } from './lib/supabase'
 import{ useState, useEffect} from 'react';
-import { PlusCircle, Search, HelpCircle, Archive, Briefcase, RefreshCw, FolderLock } from 'lucide-react';
+import { PlusCircle, Search, HelpCircle, Archive, Briefcase, FolderLock } from 'lucide-react';
 import type { JobApplication } from './types';
 import { AddJobForm } from './components/AddJobs';
-import { getInitialDemoData } from './MockData';
 import { INITIAL_TIMELINE_STEPS } from './data';
 import {QuickStartGuide} from './components/QuickStartGuide'
 import { Quotes_Perspectives } from './components/Quotes_Perspectives';
 import {JobCard} from './components/JobCard'
+import { getAnonymousUser } from './lib/auth';
 
-// Seed initial demo data for first-time loaded users
-const LOCAL_STORAGE_KEY = 'job_application_journal_v1';
 type ToastType = 'success' | 'archive' | 'system';
 
 interface ToastState {
@@ -20,126 +19,73 @@ interface ToastState {
 }
 
 function App() {
-
   const [toast, setToast] = useState<ToastState>({ visible: false, message: '', type: 'system' })
-  const [applications, setApplications] = useState<JobApplication[]>(() => {
-  const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (saved) return JSON.parse(saved);
-  
-  // If storage is empty, pull the clean demo data from our file
-  const demoData = getInitialDemoData();
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(demoData));
-  return demoData;
-});
+  const [applications, setApplications] = useState<JobApplication[]>([])
 
   const [showGuide, setShowGuide] = useState(false);
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'active' | 'archive' | 'all'>('active');
   const [statusFilter, setStatusFilter] = useState<string>('All');
-  // Clean notification logs
-  const [autoCleanupCount, setAutoCleanupCount] = useState(0);
-  const [cleanupNoticeDismissed, setCleanupNoticeDismissed] = useState(false);
   const [focusedAppId, setFocusedAppId] = useState<string | null>(null);
 
-  // Initialize and run cleanups
-  useEffect(() => {
-    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-    let appsList: JobApplication[] = [];
+  useEffect(()=>{
+    const loadApplications = async () => {
+      const { data, error } = await supabase.from('job_applications').select("*").order('created_at', {ascending: false})
     
-    if (raw) {
-      try {
-        appsList = JSON.parse(raw);
-      } catch (e) {
-        console.error('Failed to parse applications local storage data', e);
-        appsList = getInitialDemoData();
+      if(error){
+        console.error('Failed to load applications', error);
+        return;
       }
-    } else {
-      appsList = getInitialDemoData();
-    }
+        setApplications(data)
+    };
+  loadApplications();
 
-
-  
-    // 60-day rule check: Auto-mark as Unresponsive
-    // "If an application hits 60 days with zero updates, the app automatically changes its status to Unresponsive"
-
-
-   const nowTime = new Date().getTime();
-    const sixtyDaysMs = 60 * 24 * 60 * 60 * 1000;
-    let cleanupCounter = 0;
-
-    const cleanedApps = appsList.map((app) => {
-      const lastUpdate = new Date(app.updatedAt).getTime();
-      const isUnresponsiveCandidate = 
-        app.status !== 'Unresponsive' && 
-        app.status !== 'Rejected' && 
-        app.status !== 'Offered';
-
-      if (isUnresponsiveCandidate && (nowTime - lastUpdate >= sixtyDaysMs)) {
-        cleanupCounter++;
-        
-     
-        const updatedTimeline = app.timeline.map((step) => {
-          if (step.id === 'closed') {
-            return {
-              ...step,
-              completed: true,
-              date: new Date().toISOString(),
-            };
-          }
-          return step;
-        });
-
-        return {
-          ...app,
-          status: 'Unresponsive' as const,
-          timeline: updatedTimeline,
-          updatedAt: new Date().toISOString()
-        };
-      }
-      return app;
-    });
-
-        setApplications(cleanedApps);
-    if (cleanupCounter > 0) {
-      setAutoCleanupCount(cleanupCounter);
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cleanedApps));
-    } else {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appsList));
-    }
-  }, []);
-
-    // Update applications & save to storage
-  const saveApplications = (newApps: JobApplication[]) => {
-    setApplications(newApps);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newApps));
-  };
+  }, [])
 
     // Add new application
-  const handleAddApplication = (newFields: Omit<JobApplication, 'id' | 'createdAt' | 'updatedAt' | 'appliedAt' | 'timeline'>) => {
+  const handleAddApplication = async (newFields: Omit<JobApplication, 'id'|'user_id' | 'created_at' | 'updated_at' | 'applied_at' | 'timeline' | 'last_follow_up_at'>) => {
+    const user = await getAnonymousUser();
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+  
     const nowISO = new Date().toISOString();
-    const newRecord: JobApplication = {
-      ...newFields,
-      id: `app_${Date.now()}`,
-      createdAt: nowISO,
-      appliedAt: nowISO,
-      updatedAt: nowISO,
-      timeline: Array.from(INITIAL_TIMELINE_STEPS(nowISO))
-    };
 
-    const nextList = [newRecord, ...applications];
-    saveApplications(nextList);
+const { data, error} = await supabase.from('job_applications').insert({
+  ...newFields,   user_id: user.id, created_at: nowISO, applied_at: nowISO, updated_at: nowISO, timeline: INITIAL_TIMELINE_STEPS(nowISO)
+
+}).select().single();
+if(error){
+  console.error('Create Application Error',error);
+   console.log('Create Application Error',error);
+  return
+}
+setApplications(prev => [data, ...prev]);
     triggerNotification(
-    `Application for ${newRecord.role} at ${newRecord.companyName} successfully saved.`, 
+    `Application for ${data.role} at ${data.company_name} successfully saved.`, 
     'success'
   );
   };
 
     // Update application
-const handleUpdateApplication = (updated: JobApplication) => {
+const handleUpdateApplication = async (updated: JobApplication) => {
+  const user = await getAnonymousUser();
+  if (!user) {
+    console.error('User not authenticated');
+    return;
+  }
   const oldApp = applications.find((app) => app.id === updated.id);
-  const nextList = applications.map((app) => (app.id === updated.id ? updated : app));
-  saveApplications(nextList);
+  const { data, error} = await supabase.from('job_applications').update({...updated, 
+    updated_at: new Date().toISOString()
+  }).eq('id', updated.id).eq('user_id', user.id).select().single();
+
+  if(error){
+    console.error('Database update function error', error);
+    return;
+  }
+  setApplications(prev => prev.map(app => app.id === updated.id? data: app));
 
   //  Verify the status actually changed (prevents double-triggering notifications)
   if (oldApp && oldApp.status !== updated.status) {
@@ -160,11 +106,22 @@ const handleUpdateApplication = (updated: JobApplication) => {
 };
 
 
- const handleDeleteApplication = (id: string) => {
-    const nextList = applications.filter((app) => app.id !== id);
-    saveApplications(nextList);
+ const handleDeleteApplication = async (id: string) => {
+  const user = await getAnonymousUser();
+  if (!user) {
+    console.error('User not authenticated');
+    return;
+  }
+  const { data, error} = await supabase.from('job_applications').delete().eq('id', id).eq('user_id', user.id).select().single();
+
+  if(error){
+    console.error("Database delete function is throwing an error", error);
+  };
+  setApplications(prev => prev.filter(app => app.id !== id))
+ 
+
     if (focusedAppId === id) setFocusedAppId(null);
-  }; // WIll be checked for errors
+  };
 
 
     const handleScrollToActive = () => {
@@ -213,12 +170,12 @@ const handleUpdateApplication = (updated: JobApplication) => {
 if (searchQuery.trim()) {
   const q = searchQuery.toLowerCase();
   const bodyText = (
-    (app.companyName || '') + ' ' + 
+    (app.company_name || '') + ' ' + 
     (app.role || '') + ' ' + 
     (app.location || '') + ' ' + 
     (app.description || '') + ' ' + 
-    (app.cvVersion || '') + ' ' + 
-    (app.personalNotes || '')
+    (app.cv_version || '') + ' ' + 
+    (app.personal_notes || '')
   ).toLowerCase();
   
   return bodyText.includes(q);
@@ -290,27 +247,6 @@ if (searchQuery.trim()) {
             {/* Main Core View Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
         
-        {/* Helper notifications like auto cleanup */}
-        {autoCleanupCount > 0 && !cleanupNoticeDismissed && (
-          <div className="bg-slate-950 border border-slate-700/80 rounded-3xl p-5 flex gap-4 items-start animate-fade-in shadow-sm">
-            <RefreshCw className="w-5 h-5 text-slate-200 shrink-0 mt-0.5 animate-spin-slow" />
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-slate-100 uppercase tracking-wider font-display">
-                🧹 Automatic Declutter Triggered
-              </h4>
-              <p className="text-xs text-slate-400 leading-relaxed max-w-2xl mt-1">
-                We automatically updated <strong>{autoCleanupCount}</strong> application{autoCleanupCount !== 1 ? 's' : ''} to <strong>Unresponsive</strong> and archived them. It has been 60+ days with no updates on these records.
-              </p>
-            </div>
-            <button
-              onClick={() => setCleanupNoticeDismissed(true)}
-              className="text-[11px] font-mono text-slate-300 hover:text-white border border-slate-700 bg-slate-900/70 px-3 py-1 rounded-full uppercase"
-            >
-              [Got it]
-            </button>
-          </div>
-        )}
-
    {/*  Quick Start Guide Section */}
         {showGuide && (
           <QuickStartGuide onClose={() => setShowGuide(false)} />

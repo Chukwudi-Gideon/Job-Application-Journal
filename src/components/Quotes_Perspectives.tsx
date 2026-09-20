@@ -35,12 +35,14 @@ export const Quotes_Perspectives: React.FC<PerspectiveEngineProps> = ({
   const sevenDaysAgoTime = nowTime - 7 * 24 * 60 * 60 * 1000;
 
   const appsThisWeek = applications.filter((app) => {
-    return new Date(app.appliedAt).getTime() >= sevenDaysAgoTime;
+        if (!app.applied_at) return false; 
+    return new Date(app.applied_at).getTime() >= sevenDaysAgoTime;
   });
 
 const followUpsThisWeek = applications.filter((app) => {
-    const appliedTime = new Date(app.appliedAt).getTime();
-    const updatedTime = new Date(app.updatedAt).getTime();
+      if (!app.applied_at) return false; 
+    const appliedTime = new Date(app.applied_at).getTime();
+    const updatedTime = new Date(app.updated_at).getTime();
 
     // Check if the application was modified during this trailing week
     const isUpdatedThisWeek = updatedTime >= sevenDaysAgoTime;
@@ -53,7 +55,7 @@ const followUpsThisWeek = applications.filter((app) => {
   // Calculate an input-based progress score
   // Target: say, 5 inputs per week representing standard effort
   const inputActivitiesCount = appsThisWeek.length + followUpsThisWeek.length;
-  const targetInputs = 5;
+  const targetInputs = 50;
   const momentumPercent = Math.min(100, Math.round((inputActivitiesCount / targetInputs) * 100));
 
   const changeQuote = () => {
@@ -109,7 +111,7 @@ return (
 
 <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 font-mono">
   <span className="text-[11px] font-bold text-slate-400 bg-slate-905 border border-slate-800 px-2 py-0.5 rounded select-none">
-    Weekly Target: 5 Actions
+    Weekly Target: 50 Applications/Follow-ups
   </span>
   <span className="text-sm font-black text-slate-100 bg-slate-800 px-2 py-0.5 rounded">
     {momentumPercent}% Completed

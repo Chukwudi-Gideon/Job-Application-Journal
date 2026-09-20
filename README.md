@@ -1,39 +1,58 @@
-# Job Application Tracker
+# Job Application Journal
 
-A polished React + TypeScript + Vite portfolio project for tracking job applications. It follows each opportunity from application submission through the hiring lifecycle.
+A polished React + TypeScript + Vite application for tracking job applications from the first submission through interviews, offers, rejections, and follow-ups.
 
 Live demo: https://job-application-journal.vercel.app/
 
 ## Overview
 
-This project is a personal job application journal built with Vite, React, TypeScript, Tailwind CSS, and Lucide icons.
+This project is a personal job search tracker designed to help keep application history, notes, and status updates organized in one place. It combines a clean dashboard, searchable records, and structured statuses so users can move from "applying" to "follow-up" without losing context.
 
-All data is stored locally in the browser, so the tool is immediately ready to use without backend setup while preserving your application history and follow-up reminders.
+The current version is backed by Supabase for persistence and uses anonymous session-based authentication so records can be saved across sessions without a full sign-up flow.
 
-## Key Features
+## What changed in this version
 
-- Add new applications with company, role, location, salary, source, method, and notes.
-- Track application progress using status stages such as Applied, Interviewing, Offered, Rejected, and Unresponsive.
-- Automatically archive stale entries after inactivity and encourage follow-up on aging applications.
-- Inline edit application notes, CV version, and job details from the card view.
-- Prevent duplicate entries by checking company and role pairs before saving.
-- Store all data locally in browser `localStorage` so the app is ready to use without backend setup.
+- Added a more robust application dashboard with active/archive views.
+- Introduced searchable filtering by company, role, keywords, and status.
+- Added duplicate protection to reduce accidental re-entry of the same application.
+- Kept the journal focused on practical job-search workflows: notes, status changes, and historical tracking.
+- Switched storage to a Supabase-backed model instead of browser-only local persistence.
 
-## File Structure
+## Key features
 
-- `src/App.tsx` — main dashboard, app state, filters, tabs, and storage logic.
-- `src/components/AddJobs.tsx` — form for creating new applications.
-- `src/components/JobCard.tsx` — individual application cards with edit and status controls.
-- `src/components/QuickStartGuide.tsx` — in-app usage guide and feature overview.
-- `src/types.ts` — shared TypeScript interfaces and status definitions.
-- `src/data.ts` / `src/MockData.ts` — initial demo data and timeline setup.
+- Add job applications with company, role, location, salary, source, and notes.
+- Track statuses such as Applied, In Review, Interviewing, Offered, Wishlist, Accepted, Rejected, and Unresponsive.
+- Review and update records inline from the application cards.
+- Use search and status filters to focus on specific entries.
+- Archive completed roles while keeping active opportunities separate.
+- Store application data in Supabase under an anonymous user session for a lightweight, no-signup workflow.
 
-## Getting Started
+## Tech stack
+
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Supabase JS client
+- Lucide icons
+
+## Project structure
+
+- `src/App.tsx` — dashboard, filtering, tab logic, and record lifecycle.
+- `src/components/AddJobs.tsx` — add-application form and validation.
+- `src/components/JobCard.tsx` — record cards with updates, status changes, and deletion.
+- `src/components/QuickStartGuide.tsx` — in-app usage and project information.
+- `src/lib/auth.ts` — anonymous authentication utility.
+- `src/lib/supabase.ts` — Supabase client configuration.
+- `src/types.ts` — domain model and status definitions.
+- `src/data.ts` — starter data and timeline setup.
+
+## Getting started
 
 ### Requirements
 
-- Node.js 18+ (or compatible version).
-- npm installed.
+- Node.js 18+
+- npm
 
 ### Install dependencies
 
@@ -47,15 +66,15 @@ npm install
 npm run dev
 ```
 
-Open the local Vite URL shown in the terminal, then use the app to add and manage your applications.
+Open the local Vite URL shown in the terminal, then create a few records to start tracking your job search.
 
-### Build for production
+### Production build
 
 ```bash
 npm run build
 ```
 
-### Preview production build
+### Preview the production build
 
 ```bash
 npm run preview
@@ -63,17 +82,59 @@ npm run preview
 
 ## Usage
 
-1. Click **+ New Application** to open the add form.
-2. Enter the company, role, location, and other details.
-3. Save the application to add it to your dashboard.
-4. Use the tabs to switch between active and archived applications.
-5. Edit or update status directly from the job cards as your application progresses.
+1. Open the app and click New Application.
+2. Enter the company, role, and job-search details.
+3. Save the record to add it to the dashboard.
+4. Use tabs and filters to switch between active and archived records.
+5. Update the status and notes as your application moves through the process.
 
-## Notes
+## Data protection and transparency
 
-- This app uses browser `localStorage` for persistence, so your data stays available on the same device and browser.
-- There is no backend server required for the core experience.
-- The UI is designed to preserve layout and keep the tracker compact and responsive.
+This project is built for personal tracking and portfolio demonstration. The information stored is intended to help users manage their job-search process and keep relevant details in one place.
+
+### Browser and device recovery
+
+This app does not create a traditional personal login account. Instead, it uses an anonymous session and stores records in the connected Supabase project. In practical terms:
+
+- Records are generally recoverable on the same browser/device setup if the app continues to connect to the same project.
+- They are not guaranteed to appear on a different browser or device unless that browser/device is using the same configured app and backing project.
+- If the project is changed, reset, or the app is pointed at a different database, the old records will not automatically follow.
+
+This is important for anyone expecting full cross-browser portability without a real account or migration process.
+
+### What is stored
+
+Typical records may include:
+
+- company name
+- job title
+- location
+- salary or compensation notes
+- application source or method
+- description and interview notes
+- status updates and follow-up timeline
+
+### What is not intended
+
+- This app is not designed to store sensitive personal identity data, government IDs, or confidential credentials.
+- It is not a recruitment platform or HR system.
+- It is not intended to replace a formal employer record system or legal/compliance workflow.
+
+### Privacy model
+
+The app currently uses anonymous Supabase authentication and stores records in the configured Supabase project for the app's database. This means persistence is session-based and project-backed rather than fully browser-local. The app owner is responsible for managing the Supabase security settings, project access, and retention practices.
+
+### Transparency statement
+
+- Data is used only for the job-tracking workflow in this application.
+- Applications are not used for external profiling or automated hiring decisions.
+- The project is designed as a lightweight personal tool, not a commercial applicant-tracking platform.
+
+## License
+
+This project is licensed under the MIT License.
+
+See the LICENSE file for full terms.
 
 ## Dependencies
 
@@ -81,9 +142,11 @@ npm run preview
 - TypeScript
 - Vite
 - Tailwind CSS
-- Lucide React icons
+- Supabase
+- Lucide React
 
-## License
+## Notes
 
-This project is available for personal and portfolio use.
+- The app is meant to be practical and lightweight, with an emphasis on clarity, status tracking, and follow-up discipline.
+- If you deploy this project publicly, make sure your Supabase URL and anon key are configured securely and you understand the privacy implications of storing application data online.
 
