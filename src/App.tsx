@@ -112,7 +112,7 @@ const handleUpdateApplication = async (updated: JobApplication) => {
     console.error('User not authenticated');
     return;
   }
-  const { data, error} = await supabase.from('job_applications').delete().eq('id', id).eq('user_id', user.id).select().single();
+  const {error} = await supabase.from('job_applications').delete().eq('id', id).eq('user_id', user.id).select().single();
 
   if(error){
     console.error("Database delete function is throwing an error", error);
