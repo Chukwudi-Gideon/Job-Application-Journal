@@ -18,7 +18,7 @@ interface ToastState {
   type: ToastType;
 }
 
-function App() {
+export default function App() {
   const [toast, setToast] = useState<ToastState>({ visible: false, message: '', type: 'system' })
   const [applications, setApplications] = useState<JobApplication[]>([])
 
@@ -508,4 +508,4 @@ if (searchQuery.trim()) {
   );
 }
 
-export default App
+
