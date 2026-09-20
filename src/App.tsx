@@ -9,7 +9,8 @@ import {QuickStartGuide} from './components/QuickStartGuide'
 import { Quotes_Perspectives } from './components/Quotes_Perspectives';
 import {JobCard} from './components/JobCard'
 import { getAnonymousUser } from './lib/auth';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/react';
+
 type ToastType = 'success' | 'archive' | 'system';
 
 interface ToastState {
